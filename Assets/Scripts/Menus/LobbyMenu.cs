@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,9 +9,11 @@ using UnityEngine.UI;
 
 public class LobbyMenu : MonoBehaviour
 {
+
     [SerializeField] private GameObject lobbyUI = null;
     [SerializeField] private Button startGameButton = null;
     [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];
+
 
     private void Start()
     {
@@ -19,7 +22,7 @@ public class LobbyMenu : MonoBehaviour
         RTSPlayer.ClientOnInfoUpdated += ClientHandleInfoUpdated;
     }
 
-    private void OnDestory()
+    private void OnDestroy()
     {
         RTSNetworkManager.ClientOnConnected -= HandleClientConnected;
         RTSPlayer.AuthorityOnHostStateUpdated -= AuthorityHandleHostStateUpdated;
@@ -71,5 +74,7 @@ public class LobbyMenu : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     }
+
+
 
 }

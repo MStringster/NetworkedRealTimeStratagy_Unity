@@ -14,6 +14,8 @@ public class MainMenu : MonoBehaviour
     protected Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
     protected Callback<LobbyEnter_t> lobbyEntered;
 
+    public static CSteamID lobbyId { get; private set; }
+
     private void Start()
     {
         if(!useSteam) { return; }
@@ -44,12 +46,14 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
+        lobbyId = new CSteamID(callback.m_ulSteamIDLobby);
+
         NetworkManager.singleton.StartHost();
 
-        SteamMatchmaking.SetLobbyData(
-            new CSteamID(callback.m_ulSteamIDLobby),
+        SteamMatchmaking.SetLobbyData(lobbyId,
             "HostAddress",
             SteamUser.GetSteamID().ToString());
+        
     }
     private void OnGameLobbyJoinRequested(GameLobbyJoinRequested_t callback)
     {

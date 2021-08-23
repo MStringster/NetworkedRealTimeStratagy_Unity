@@ -3,9 +3,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Steamworks;
 
 public class RTSPlayer : NetworkBehaviour
 {
+    [SyncVar(hook = nameof(HandleSteamIdUpdated))]
+    private ulong steamId;
+
+
+
     [SerializeField] private Transform cameraTransform = null;
     [SerializeField] private LayerMask buildingBlockLayer = new LayerMask();
     [SerializeField] private Building[] buildings = new Building[0];
@@ -30,6 +36,13 @@ public class RTSPlayer : NetworkBehaviour
     private Color teamColor = new Color();
     private List<Unit> myUnits = new List<Unit>();
     private List<Building> myBuildings = new List<Building>();
+
+
+    public void SetSteamId(ulong steamId)
+    {
+        this.steamId = steamId;
+    }
+
 
     public string GetDisplayName()
     {
@@ -263,5 +276,13 @@ public class RTSPlayer : NetworkBehaviour
     {
         myBuildings.Remove(building);
     }
+
+    private void HandleSteamIdUpdated(ulong oldSteamId, ulong newSteamId)
+    {
+        var cSteamID = new CSteamID(newSteamId);
+
+        SetDisplayName(SteamFriends.GetFriendPersonaName(cSteamID));
+    }
+
     #endregion
 }
